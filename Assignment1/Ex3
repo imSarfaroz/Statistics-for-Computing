@@ -1,0 +1,29 @@
+# Problem Set #1 
+# Sarfaroz Yunusov
+# Ex 3
+import pylab
+
+#list of int
+list = [1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5]
+
+# making 1 list to 2 lists with correct values and frequencies
+values = [1, 2, 3, 4, 5]
+freqs = [2, 4, 7, 6, 4]
+
+freq = {} #empty dic
+for i in list:
+    freq[i] = list.count(i) #counting the freq of num
+cumPer = 0
+
+# printing and calculating the percentage and cumPerc
+print('value: freqs: perc:  cum perc:')
+for key, value in freq.items():
+    percentage = value * 100 / 23
+    cumPer = cumPer + percentage
+    print ("%d      %d      %.2f%%  %.2f%%"%(key, value, percentage, cumPer))
+       
+# Displaying a histogram
+pylab.hist(list, bins=6)
+pylab.ylabel('Frequency')
+pylab.xlabel('happycellphone')
+pylab.title('data histogram')

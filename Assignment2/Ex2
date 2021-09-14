@@ -1,0 +1,45 @@
+# Problem Set #2 
+# Sarfaroz Yunusov
+# Ex 2 Part 2
+import pylab
+
+# list of integers
+dataSet = [18, 18, 18, 19, 19, 19, 19, 20, 22, 22, 23, 23, 23, 24, 25, 26, 26, 29, 33, 64]
+
+#Mean of the list
+def meanOfList(list):
+    sum = 0
+    for i in list:
+        sum = sum + i
+    
+    mean = sum/len(list) # the total sum of integers in a list devided by the total numbers of int
+    return mean
+
+#median of the list
+def medianOfList(list):
+    length = len(dataSet)  # length of the total given list
+    
+    if length % 2 == 0:
+        m1 = dataSet[length//2]  #starts from 0 and 20/2 = 10 -> 23
+
+        m2 = dataSet[length//2 - 1] # 20/2-1 - 9 -> 22
+        result = (m1 + m2) / 2  # (23+22) / 2 = 22.5
+    else:
+        result = dataSet[length//2] # if odd, just taking the number inthe center of the list
+    return result  # returning the median of the list
+
+# mode of the list
+def modeOfList(list):
+    counter = {} # empty dictionary
+    for i in dataSet:
+        counter[i] = dataSet.count(i) #counting the frequency of each integers in the list
+        
+    maxNum = max(counter.values())  # taking max num of frequency (in the given list is 4)
+    mode = [key for key, value in counter.items()  # taking a key, which the value of it has a max frequency
+                      if value == maxNum]     #and return a most frequent key as a list type
+    return mode
+
+#printing the results
+print('Mean', meanOfList(dataSet))
+print('Median', medianOfList(dataSet))
+print("Mode", modeOfList(dataSet))

@@ -1,0 +1,43 @@
+
+# Problem Set #2 
+# Sarfaroz Yunusov
+# Ex 3 Part 1
+import pylab
+
+#list of int
+dataSet = [18, 18, 18, 19, 19, 19, 19, 20, 22, 22, 23, 23, 23, 24, 25, 26, 26, 29, 33, 64]
+
+# Definitial formula
+def squaredDeviation(list):
+    # finding  the mean
+    sum = 0
+    for i in list:
+        sum = sum + i  # the sum of all int numbers in the list
+        
+    mean = sum/len(list)  # the dev of sum of ints in list and the lengt of the list
+    #print(mean)
+    
+    devs = 0        #deviation
+    for j in list:
+        devs = devs + (j - mean) ** 2  # the sum of squared deviation score
+
+    return devs # returning the sum of squared dev using the definitial formula
+
+# Computationla formula
+def squaredDeviation2(list):
+    sum2 = 0
+    sum3 = 0
+    for i in list:
+        sum2 = sum2 + i**2     # (Ex^2)
+    
+    for j in list:
+        sum3 = sum3 + j      # (Ex)
+        
+    squared = sum3**2 / len(list)  # result = (Ex)^2 / N
+    
+    result = sum2 - squared #SS = (Ex^2) - (Ex)^2 / N
+    return result  # returning the result using the computational formula
+
+#printing the with the two digits after the decimal point
+print("%.2f"%(squaredDeviation(dataSet)))
+print("%.2f"%(squaredDeviation2(dataSet)))

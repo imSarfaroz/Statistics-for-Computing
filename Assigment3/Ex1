@@ -1,0 +1,104 @@
+# Problem Set #3
+# Sarfaroz Yunusov
+# Ex 1 (Part1)
+
+
+import pylab
+import math
+
+def meanOfList(list):
+    sum = 0
+    for i in list:
+        sum = sum + i
+    
+    mean = sum/len(list) # the total sum of integers in a list devided by the total numbers of int
+    return mean
+
+
+def medianOfList(list):
+    length = len(list)  # length of the total given list
+    
+    if length % 2 == 0:
+        m1 = list[length//2]  #starts from 0 and 20/2 = 10 -> 23
+
+        m2 = list[length//2 - 1] # 20/2-1 - 9 -> 22
+        result = (m1 + m2) / 2  # (23+22) / 2 = 22.5
+    else:
+        result = list[length//2] # if odd, just taking the number inthe center of the list
+    return result  # returning the median of the list
+
+def modeOfList(list):
+    counter = {} # empty dictionary
+    for i in list:
+        counter[i] = list.count(i) #counting the frequency of each integers in the list
+        
+    maxNum = max(counter.values())  # taking max num of frequency (in the given list is 4)
+    mode = [key for key, value in counter.items()  # taking a key, which the value of it has a max frequency
+                      if value == maxNum]     #and return a most frequent key as a list type
+    return mode
+
+# Definitial formula
+def squaredDeviation(list):
+    # finding  the mean
+    sum = 0
+    for i in list:
+        sum = sum + i  # the sum of all int numbers in the list
+        
+    mean = sum/len(list)  # the dev of sum of ints in list and the lengt of the list
+    #print(mean)
+    
+    devs = 0        #deviation
+    for j in list:
+        devs = devs + (j - mean) ** 2  # the sum of squared deviation score
+
+    return devs # returning the sum of squared dev using the definitial formula
+
+def varianceSample(list):
+    return squaredDeviation(list) / (len(list) - 1)
+
+def variancePopulation(list):
+    return squaredDeviation(list) / (len(list))
+
+def standardDeviationSample(list):
+    return math.sqrt(squaredDeviation(list) / (len(list) - 1))
+
+def standardDeviationPopulation(list):
+    return math.sqrt(squaredDeviation(list) / (len(list)))
+
+def maximum(list):
+    return max(list)
+
+def minimum(list):
+    return min(list)
+
+def coefVariationSample(list):
+    return standardDeviationSample(list) / meanOfList(list)
+
+def coefVariationPopulation(list):
+    return standardDeviationPopulation(list) / meanOfList(list)
+
+
+def dataSet(list, type):
+    if type == "sample":
+        print("Mean: %.2f"%meanOfList(list))
+        print("Median: %.2f"%medianOfList(list))
+        print("Mode: ", modeOfList(list))
+        print("Sample variance: %.2f"%varianceSample(list))
+        print("Sample std deviantion: %.2f"%standardDeviationSample(list))
+        print("Maximum: ", maximum(list))
+        print("Minimum: ", minimum(list))
+        print("Coef of variation: %.2f"%coefVariationSample(list))
+    elif type == "population":
+        print("Mean: %.2f"%meanOfList(list))
+        print("Median: %.2f"%medianOfList(list))
+        print("Mode: ", modeOfList(list))
+        print("Population variance: %.2f"%variancePopulation(list))
+        print("Population std deviantion: %.2f"%standardDeviationPopulation(list))
+        print("Maximum: ", maximum(list))
+        print("Minimum: ", minimum(list))
+        print("Coef of variation: %.2f"%coefVariationPopulation(list))
+    else:
+        print("choose 'population' or 'sample'")
+
+
+dataSet([2,2,5,2,6,4,0], "population")

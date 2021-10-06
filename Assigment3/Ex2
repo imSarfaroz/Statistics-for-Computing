@@ -1,0 +1,41 @@
+
+# Ex 2
+
+import pylab
+import random
+
+def flip(numFlips): # function for random flip of the coin
+    """Assumes numFlips a positive int"""
+    heads = 0
+    for i in range(numFlips):   # loops over the number of flips given as an argument to the function
+        if random.choice(('H', 'T')) == 'H': # randomly chooses over H or T
+            heads += 1    # counts the number of H randomly choosen from random.choice
+    return heads/numFlips  # returns the value of head out of total number of flips
+
+def regressToMean(numFlips, numTrials):
+    #Get fraction of heads for each trial of numFlips
+    fracHeads = []
+    for t in range(numTrials):
+        fracHeads.append(flip(numFlips))
+    #Find trials with extreme results and for each the next trial
+    extremes, nextTrials = [], []
+    for i in range(len(fracHeads) - 1):
+        if fracHeads[i] < 0.33 or fracHeads[i] > 0.67:  # specifies the ranges that can be identifues as extreme
+            extremes.append(fracHeads[i]) # save the extreme cases 
+            nextTrials.append(fracHeads[i+1]) 
+            
+    #Plot results
+    pylab.plot(range(len(extremes)), extremes, 'ko',
+               label = 'Extreme')
+    pylab.plot(range(len(nextTrials)), nextTrials, 'k^',
+               label = 'Next Trial')
+    pylab.axhline(0.5)
+    pylab.ylim(0, 1)
+    pylab.xlim(-1, len(extremes) + 1)
+    pylab.xlabel('Extreme Example and Next Trial')
+    pylab.ylabel('Fraction Heads')
+    pylab.title('Regression to the Mean')
+    pylab.legend(loc = 'best')
+
+# main 
+regressToMean(15, 40)

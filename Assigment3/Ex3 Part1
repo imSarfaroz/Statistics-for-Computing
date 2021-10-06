@@ -1,0 +1,30 @@
+
+import scipy.integrate
+import random
+import pylab
+
+
+def gaussian(x, mu, sigma): # calcualte the guassian value based on X, MU, and Sigma
+    factor1 = (1.0/(sigma*((2*pylab.pi)**0.5)))
+    factor2 = pylab.e**-(((x-mu)**2)/(2*sigma**2))
+    return factor1*factor2
+
+def checkEmpirical(numTrials): # checks Emperical 
+    for t in range(numTrials): # loops over the given number of trials
+        mu = random.randint(-10, 10) # randomly chooses mu from the range -10 to 10
+        sigma = random.randint(1, 10) # randomly chooses sigma from the range 1 to 10
+        print('For mu =', mu, 'and sigma =', sigma) # print the value
+        
+        # takes each value and calculates its appropriate area
+        for numStd in (1, 2, 3):
+            area = scipy.integrate.quad(gaussian, mu-numStd*sigma,
+                                        mu+numStd*sigma,
+                                        (mu, sigma))[0]
+            #prints the results of calculations
+            print('  Fraction within', numStd, 'std =',
+                  round(area, 4))
+
+checkEmpirical(2)
+print(gaussian(4, 4, 9))
+
+print(scipy.integrate.quad(gaussian,-2,2,(0,1))[0])

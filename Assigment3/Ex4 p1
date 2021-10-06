@@ -1,0 +1,83 @@
+
+# Problem Set #3
+# Sarfaroz Yunusov
+# Ex 4 (Q1)
+
+import random 
+import pylab 
+import math
+ 
+vals = [] 
+ 
+# function to calculate the varience 
+def variance(X): 
+    """Assumes that X is a list of numbers. 
+        Returns the standard deviation of X""" 
+    mean = sum(X)/len(X) 
+    tot = 0.0 
+    for x in X: 
+        tot += (x - mean)**2 
+    return tot/len(X) 
+ 
+#function to calculate the standard deviation 
+def stdDev(X): 
+    """Assumes that X is a list of numbers. 
+        Returns the standard deviation of X""" 
+    return variance(X)**0.5 
+ 
+# function for random flip of the coin     
+def roll(numFlips): 
+    """Assumes numFlips a positive int""" 
+    r1 = 0 
+    for i in range(numFlips):
+        r1 = int(random.choice(('1', '2', '3', '4', '5', '6')))
+        
+    return r1/float(numFlips)
+ 
+def rollSim(numFlipsPerTrial, numTrials): 
+    fracHeads = [] 
+    for i in range(numTrials): 
+        fracHeads.append(roll(numFlipsPerTrial)) # saves the data produced by the function flip in the list frachead 
+    mean = sum(fracHeads)/len(fracHeads) #calculates the mean 
+    sd = stdDev(fracHeads) # calculates the stabdard deviation 
+    return (fracHeads, mean, sd) # return the list of flipped couins, the means and the stabdard deviation 
+ 
+#plot the results 
+def labelPlot(numFlips, numTrials, mean, sd): 
+    pylab.title(str(numTrials) + ' trials') 
+    pylab.xlabel('Fraction of rolls') 
+    pylab.ylabel('Number of Trials') 
+    pylab.annotate('Mean = ' + str(round(mean, 5))
+                    + '\nSD = ' + str(round(sd, 5)), size='medium', 
+                    xycoords = 'axes fraction', xy = (0.75, 0.9)) 
+ 
+def makePlots(numFlips1, numFlips2, numTrials): 
+    val1, mean1, sd1 = rollSim(numFlips1, numTrials) 
+    pylab.hist(val1, bins = 6) 
+    xmin,xmax = pylab.xlim() 
+    labelPlot(numFlips1, numTrials, mean1, sd1) 
+    pylab.figure() 
+
+       
+#Figure 15.24 
+def showErrorBars(minExp, maxExp, numTrials): 
+    """Assumes minExp and maxExp positive ints; minExp < maxExp 
+          numTrials a positive integer 
+        Plots mean fraction of heads with error bars""" 
+    means, sds, xVals = [], [], [] 
+    for exp in range(minExp, maxExp + 1): 
+        xVals.append(2**exp) 
+        fracHeads, mean, sd = rollSim(2**exp, numTrials) 
+        means.append(mean) 
+        sds.append(sd) 
+    pylab.errorbar(xVals, means, yerr=1.96*pylab.array(sds)) 
+    pylab.semilogx() 
+    pylab.title('Mean Fraction of Rolls (' 
+                + str(numTrials) + ' trials)') 
+    pylab.xlabel('Number of rolls per trial') 
+    pylab.ylabel('Fraction of rolls & 95% confidence') 
+     
+     
+showErrorBars(3,12, 60) 
+makePlots(1, 10, 600)
+

@@ -1,0 +1,125 @@
+# Sarfaroz Yunusov
+# Assignment 5 Ex4  P1
+
+import math
+import pylab
+import csv
+import random
+
+# functions mean, std for calculating T test
+def mean(list):
+    sum = 0
+    for i in list:
+        sum = sum + i
+    
+    mean = sum/len(list) # the total sum of integers in a list devided by the total numbers of int
+    return mean
+
+def squaredDeviation(list):
+    # finding  the mean
+    sum = 0
+    for i in list:
+        sum = sum + i  # the sum of all int numbers in the list
+        
+    mean = sum/len(list)  # the dev of sum of ints in list and the lengt of the list
+    #print(mean)
+    
+    devs = 0        #deviation
+    for j in list:
+        devs = devs + (j - mean) ** 2  # the sum of squared deviation score
+
+    return devs # returning the sum of squared dev using the definitial formula
+
+def standardDeviation(list):
+    return math.sqrt(squaredDeviation(list) / (len(list) - 1))
+
+def lengthOfDataSet(list):
+    return len(list)
+
+# Mosquitofish t-test and comparing to the population mean of Mosquitofish
+with open(r'Mosquitofish.csv', newline='') as csvfile:
+    fishreader = csv.reader(csvfile, delimiter = ',')
+    line_count = 0
+    MosWeights = []
+    location = []
+    for row in fishreader:
+        if line_count == 0:
+            line_count += 1
+        else:
+            MosWeights.append(int(row[1]))
+            line_count += 1
+
+# taking 20 random samples
+ranListMos = random.sample(MosWeights, 20)
+# saving the pop mean of Mosquitofish for the sake of using it for other Datasets
+meanOfMosFish = mean(MosWeights)
+
+# printing 20 random smaples 
+print("20 random samples from Mosquitofish:")
+print(random.sample(MosWeights, 20))
+
+# comparing the mean of the 20 random sample with the population mean of the Mosquitosh
+# results of t-test
+print("t test result for the first ramdonly chosen dataset:")
+print("%.3f"%((mean(ranListMos) - mean(MosWeights)) / (standardDeviation(ranListMos) / math.sqrt(len(ranListMos)))))
+
+
+print("\n")
+
+# Bluegill t-test and comparing to the population mean of Mosquitofish
+with open(r'Bluegill.csv', newline='') as csvfile:
+    fishreader = csv.reader(csvfile, delimiter = ',')
+    line_count = 0
+    BlueWeights = []
+    location = []
+    for row in fishreader:
+        if line_count == 0:
+            line_count += 1
+        else:
+            BlueWeights.append(int(row[1]))
+            line_count += 1
+
+# taking 20 random samples
+ranListBlue = random.sample(BlueWeights, 20)
+
+print("20 random samples from Bluegill:")
+print(ranListBlue)
+
+# comparing the mean of the 20 random sample from BlueGill with the population mean of the Mosquitosh
+# t test result
+print("t test result for the first ramdonly chosen dataset:")
+print("%.3f"%((mean(ranListBlue) - meanOfMosFish) / (standardDeviation(ranListBlue) / math.sqrt(len(ranListBlue)))))
+
+
+print("\n")
+
+# Sticklebacks t-test and comparing to the population mean of Mosquitofish
+with open(r'Sticklebacks.csv', newline='') as csvfile:
+    fishreader = csv.reader(csvfile, delimiter = ',')
+    line_count = 0
+    StickWeights = []
+    location = []
+    for row in fishreader:
+        if line_count == 0:
+            line_count += 1
+        else:
+            StickWeights.append(int(row[1]))
+            line_count += 1
+
+# taking 20 random samples from Stickbacks
+ranListStick = random.sample(StickWeights, 20)
+
+#print(weights)
+print("20 random samples from Sticklebacks:")
+print(ranListStick)
+
+# comparing the mean of the 20 random sample from Sticklebacks with the population mean of the Mosquitosh
+# t test result
+print("t test result for the first ramdonly chosen dataset:")
+print("%.3f"%((mean(ranListStick) - meanOfMosFish) / (standardDeviation(ranListStick) / math.sqrt(len(ranListStick)))))
+
+
+print("\n")
+
+
+print("the mean of the Mosquitofish: %d"%meanOfMosFish)

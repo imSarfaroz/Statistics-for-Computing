@@ -1,0 +1,53 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Oct  2 20:01:24 2021
+
+@author: Sarfaroz Yunusov
+"""
+import pylab
+import math
+
+DataSet = [67, 74, 77, 81, 85, 89, 92, 93, 94, 99]
+DataSet2 = [67, 74, 70, 76, 80, 85, 92, 93, 90, 99]  # if we had the mean of other population to compare for computing effect size
+
+# computing the mean of the list
+def meanOfList(list):
+    sum = 0
+    for i in list:
+        sum = sum + i
+    
+    mean = sum/len(list) 
+    return mean
+
+# Computationla formula
+def sqDeviation(list):
+    sum2 = 0
+    sum3 = 0
+    for i in list:
+        sum2 = sum2 + i**2
+    
+    for j in list:
+        sum3 = sum3 + j
+    squared = sum3**2 / len(list)
+    
+    result = sum2 - squared 
+    return result 
+
+#standard deviation function
+def standardDev(list):
+    return math.sqrt(sqDeviation(DataSet) / (len(list) - 1))
+
+#copmuting effect size of the two give pop data
+def effectSize(list):
+    return (meanOfList(list) - meanOfList(DataSet2)) / standardDev(list)
+
+# z score function
+def zScore(list):
+    print("Raw Score   Z-score")
+    for i in list:
+        print("%d            %.2f"% (i, (i - meanOfList(DataSet)) / standardDev(DataSet)))
+    return ""
+
+    
+print(zScore(DataSet))
+print("effect size (if another data given): %.2f"%effectSize(DataSet))

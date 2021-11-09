@@ -1,0 +1,33 @@
+# Sarfaroz Yunusov
+# Assignment 5 Ex2
+
+import pylab
+from scipy.stats import t
+
+# need to use function t.ppf()
+# according to python documentation, the arguments of t.ppf() are q-value, df, mean, SEM
+
+numofSample = int(input("Enter number of sample:\n"))
+MeanOfSample = float(input("Enter Mean of sample:\n"))
+SEM = float(input("Enter SEM:\n"))
+
+
+def ConfidenceLevel(conLevel):
+    if(conLevel == 95):
+        lower_cutoff = t.ppf(0.025, numofSample - 1, loc = MeanOfSample, scale = SEM) 
+        upper_cutoff = t.ppf(0.975, numofSample - 1, loc = MeanOfSample, scale = SEM)
+        print("Confidence Internval is:")
+        print("%.2f"%lower_cutoff)
+        print("%.2f"%upper_cutoff)
+    elif (conLevel == 99):
+        lower_cutoff = t.ppf(0.005, numofSample - 1, loc = MeanOfSample, scale = SEM) 
+        upper_cutoff = t.ppf(0.995, numofSample - 1, loc = MeanOfSample, scale = SEM)
+        print("Confidence Internval is:")
+        print("%.2f"%lower_cutoff)
+        print("%.2f"%upper_cutoff)
+    else:
+        print("you must choose 95 or 99")
+    
+
+ConfidenceLevel(95)
+

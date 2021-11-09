@@ -1,0 +1,183 @@
+# Sarfaroz Yunusov
+# Assignment 5 Ex3
+
+#BlueGill
+
+import math
+import pylab
+import csv
+import random
+
+# Calculating T-test for each dataset
+
+def mean(list):
+    sum = 0
+    for i in list:
+        sum = sum + i
+    mean = sum/len(list) # the total sum of integers in a list devided by the total numbers of int
+    return mean
+
+def squaredDeviation(list):
+    # finding  the mean
+    sum = 0
+    for i in list:
+        sum = sum + i  # the sum of all int numbers in the list
+    mean = sum/len(list)  # the dev of sum of ints in list and the lengt of the list
+    #print(mean)
+    devs = 0  
+    for j in list:
+        devs = devs + (j - mean) ** 2
+    return devs 
+
+def standardDeviationSample(list):
+    return math.sqrt(squaredDeviation(list) / (len(list) - 1))
+
+def lengthOfDataSet(list):
+    return len(list)
+
+with open(r'Bluegill.csv', newline='') as csvfile:
+    fishreader = csv.reader(csvfile, delimiter = ',')
+    line_count = 0
+    weights = []
+    for row in fishreader:
+        if line_count == 0:
+            print(f'Column names are {", ".join(row)}')
+            line_count += 1
+        else:
+            print(f'\t{row[0]} {row[1]}')
+            weights.append(int(row[1]))
+            line_count += 1
+    print(f'Processed {line_count} lines.')
+
+print(weights)    
+
+pylab.hist(weights)
+pylab.title('Bluegill') 
+pylab.xlabel('length') 
+pylab.ylabel('record') 
+pylab.annotate('Mean = ' + str(round(mean(weights), 2))
+                + '\nSD = ' + str(round(standardDeviationSample(weights), 2)), size='medium', 
+                xycoords = 'axes fraction', xy = (0.75, 0.9)) 
+
+
+#Mosquitosh
+
+import math
+import pylab
+import csv
+import random
+
+
+# Calculating T-test for the each dataset
+
+def mean(list):
+    sum = 0
+    for i in list:
+        sum = sum + i
+    mean = sum/len(list) # the total sum of integers in a list devided by the total numbers of int
+    return mean
+
+def squaredDeviation(list):
+    # finding  the mean
+    sum = 0
+    for i in list:
+        sum = sum + i  # the sum of all int numbers in the list
+    mean = sum/len(list)  # the dev of sum of ints in list and the lengt of the list
+    #print(mean)
+    devs = 0  
+    for j in list:
+        devs = devs + (j - mean) ** 2
+    return devs 
+
+def standardDeviationSample(list):
+    return math.sqrt(squaredDeviation(list) / (len(list) - 1))
+
+def lengthOfDataSet(list):
+    return len(list)
+
+
+with open(r'Mosquitosh.csv', newline='') as csvfile:
+    fishreader = csv.reader(csvfile, delimiter = ',')
+    line_count = 0
+    weights = []
+    for row in fishreader:
+        if line_count == 0:
+            print(f'Column names are {", ".join(row)}')
+            line_count += 1
+        else:
+            print(f'\t{row[0]} {row[1]}  {row[2]}')
+            weights.append(int(row[1]))
+            line_count += 1
+    print(f'Processed {line_count} lines.')
+
+print(weights)    
+
+pylab.hist(weights)
+pylab.title('Bluegill') 
+pylab.xlabel('length') 
+pylab.ylabel('record') 
+pylab.annotate('Mean = ' + str(round(mean(weights), 2))
+                + '\nSD = ' + str(round(standardDeviationSample(weights), 2)), size='medium', 
+                xycoords = 'axes fraction', xy = (0.75, 0.9)) 
+
+
+
+#Sticklebacks
+
+import math
+import pylab
+import csv
+import random
+
+
+# Calculating T test for the each dataset
+
+def mean(list):
+    sum = 0
+    for i in list:
+        sum = sum + i
+    mean = sum/len(list) # the total sum of integers in a list devided by the total numbers of int
+    return mean
+
+def squaredDeviation(list):
+    # finding  the mean
+    sum = 0
+    for i in list:
+        sum = sum + i  # the sum of all int numbers in the list
+    mean = sum/len(list)  # the dev of sum of ints in list and the lengt of the list
+    #print(mean)
+    devs = 0  
+    for j in list:
+        devs = devs + (j - mean) ** 2
+    return devs 
+
+def standardDeviationSample(list):
+    return math.sqrt(squaredDeviation(list) / (len(list) - 1))
+
+def lengthOfDataSet(list):
+    return len(list)
+
+
+with open(r'Sticklebacks.csv', newline='') as csvfile:
+    fishreader = csv.reader(csvfile, delimiter = ',')
+    line_count = 0
+    weights = []
+    for row in fishreader:
+        if line_count == 0:
+            print(f'Column names are {", ".join(row)}')
+            line_count += 1
+        else:
+            print(f'\t{row[0]} {row[1]}')
+            weights.append(int(row[1]))
+            line_count += 1
+    print(f'Processed {line_count} lines.')
+
+print(weights)    
+
+pylab.hist(weights)
+pylab.title('Bluegill') 
+pylab.xlabel('length') 
+pylab.ylabel('record') 
+pylab.annotate('Mean = ' + str(round(mean(weights), 2))
+                + '\nSD = ' + str(round(standardDeviationSample(weights), 2)), size='medium', 
+                xycoords = 'axes fraction', xy = (0.75, 0.9)) 

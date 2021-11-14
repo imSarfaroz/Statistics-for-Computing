@@ -1,0 +1,96 @@
+# Problem Set #6
+# Sarfaroz Yunusov
+# Ex 3 (Part2)
+
+import math
+import pylab
+import csv
+import random
+
+# functions mean, std for calculating T test
+def mean(list):
+    sum = 0
+    for i in list:
+        sum = sum + i
+    
+    mean = sum/len(list) # the total sum of integers in a list devided by the total numbers of int
+    return mean
+
+def squaredDeviation(list):
+    # finding  the mean
+    sum = 0
+    for i in list:
+        sum = sum + i  # the sum of all int numbers in the list
+        
+    mean = sum/len(list)  # the dev of sum of ints in list and the lengt of the list
+    #print(mean)
+    
+    devs = 0        #deviation
+    for j in list:
+        devs = devs + (j - mean) ** 2  # the sum of squared deviation score
+
+    return devs # returning the sum of squared dev using the definitial formula
+
+def standardDeviation(list):
+    return math.sqrt(squaredDeviation(list) / (len(list) - 1))
+
+def lengthOfDataSet(list):
+    return len(list)
+
+#taking samples from both databases and comparing them
+with open(r'C:\Users\Admin\Desktop\Mosquitofish.csv', newline='') as csvfile:
+    fishreader = csv.reader(csvfile, delimiter = ',')
+    line_count = 0
+    MosWeights = []
+    location = []
+    for row in fishreader:
+        if line_count == 0:
+            line_count += 1
+        else:
+            MosWeights.append(int(row[1]))
+            line_count += 1
+
+# taking 40 random samples
+ranListMos = random.sample(MosWeights, 40)
+
+# printing 40 random smaples 
+print("40 random samples from Mosquitofish:")
+print(ranListMos)
+print("mean of the samples: %.2f"%mean(ranListMos))
+print("standard deviation of the samples: %.2f\n"%standardDeviation(ranListMos))
+
+
+# Sticklebacks t-test and comparing to the population mean of Mosquitofish
+with open(r'C:\Users\Admin\Desktop\Sticklebacks.csv', newline='') as csvfile:
+    fishreader = csv.reader(csvfile, delimiter = ',')
+    line_count = 0
+    StickWeights = []
+    location = []
+    for row in fishreader:
+        if line_count == 0:
+            line_count += 1
+        else:
+            StickWeights.append(int(row[1]))
+            line_count += 1
+
+# taking 40 random samples from Stickbacks
+ranListStick = random.sample(StickWeights, 40)
+
+print("40 random samples from Sticklebacks:")
+print(ranListStick)
+print("mean of the samples: %.2f"%mean(ranListStick))
+print("standard deviation of the samples: %.2f\n"%standardDeviation(ranListStick))
+
+#  calculations of the independent t test
+def statistics(list1, list2):
+    DF = len(list1) - 1 + (len(list2) - 1)
+    print("degree of freedom: ", DF)
+    
+    sd = ((squaredDeviation(list1) + squaredDeviation(list2)) / ((len(list1) - 1) + (len(list2) - 1)))
+
+    SEM = math.sqrt(sd / len(list1) + sd / len(list2))
+    tTest = ((mean(list1) - mean(list2)) / SEM)
+    print("independent sample T-test: %.3f"%tTest)
+    
+# calculating the independent t test of the randomly taken samples
+statistics(ranListStick, ranListMos)

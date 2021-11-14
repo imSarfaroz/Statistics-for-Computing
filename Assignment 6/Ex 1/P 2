@@ -1,0 +1,63 @@
+# Problem Set #6
+# Sarfaroz Yunusov
+# Ex 1 (Part2)
+
+import pylab
+import math
+from scipy.stats import t
+import pylab, random, scipy
+from scipy import stats
+from scipy.stats import ttest_ind
+
+def meanOfList(list):
+    sum = 0
+    for i in list:
+        sum = sum + i
+    
+    mean = sum/len(list)
+    return mean
+
+def squaredDeviation(list):
+    # finding  the mean
+    sum = 0
+    for i in list:
+        sum = sum + i  # the sum of all int numbers in the list
+        
+    mean = sum/len(list)  # the dev of sum of ints in list and the lengt of the list
+    #print(mean)
+    
+    devs = 0        #deviation
+    for j in list:
+        devs = devs + (j - mean) ** 2  # the sum of squared deviation score
+
+    return devs # returning the sum of squared dev using the definitial formula
+
+def standardDeviation(list):
+    return math.sqrt(squaredDeviation(list) / (len(list) - 1))
+
+def statistics(list1, list2):
+    meanDiff = (meanOfList(list1) - meanOfList(list2))
+    print("Mean difference of the samples: %.3f"%(meanDiff))
+  
+    sdOfDiff = [x1 - x2 for (x1, x2) in zip(list1, list2)]
+    print("Standard Deviation of Difference: %.3f"%standardDeviation(sdOfDiff))
+    
+    print("t-value: %.3f"%(meanDiff / (standardDeviation(sdOfDiff) / math.sqrt(len(list1)))))
+    
+    DF = len(list1) - 1
+    print("degree of freedom: ", DF)
+    
+    numofSample = len(list1)
+    MeanOfSample = meanDiff
+    SEM = (standardDeviation(sdOfDiff) / math.sqrt(len(list1)))
+    lower_cutoff = t.ppf(0.025, numofSample - 1, loc = MeanOfSample, scale = SEM) 
+    upper_cutoff = t.ppf(0.975, numofSample - 1, loc = MeanOfSample, scale = SEM)
+
+    print("Confidence interval(95) is: [%.2f, %.2f]"%(lower_cutoff,upper_cutoff))
+    
+    
+    tStat, twoTailProb = ttest_ind(list1, list2)
+    print('significance: ', (twoTailProb))
+    
+statistics([23.5, 22.3, 20.2, 22.5, 21.3, 23.2, 23.7, 22.7, 20.2, 20.9, 22.3, 23.1, 20.3, 25.1, 24.8, 22.0, 21.3, 23.2, 21.3, 22.0],
+           [19.5, 20.1, 19.1, 19.2, 21.2, 19.6, 19.8, 20.2, 17.7, 18.6, 20.8, 21.1, 18.5, 16.1, 17.3, 22.4, 21.5, 18.6, 20.5, 20.4])

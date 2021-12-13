@@ -1,0 +1,74 @@
+
+# Sarfaroz Yunusov
+# Assingment 8
+# Ex 4
+
+import pylab
+
+#set line width
+pylab.rcParams['lines.linewidth'] = 4
+#set font size for titles 
+pylab.rcParams['axes.titlesize'] = 20
+#set font size for labels on axes
+pylab.rcParams['axes.labelsize'] = 20
+#set size of numbers on x-axis
+pylab.rcParams['xtick.labelsize'] = 16
+#set size of numbers on y-axis
+pylab.rcParams['ytick.labelsize'] = 16
+#set size of ticks on x-axis
+pylab.rcParams['xtick.major.size'] = 7
+#set size of ticks on y-axis
+pylab.rcParams['ytick.major.size'] = 7
+#set size of markers, e.g., circles representing points
+#set numpoints for legend
+pylab.rcParams['legend.numpoints'] = 1
+
+
+def getData(list1, list2):
+    return ([8.5, 10, 11, 8, 9.5], [64, 67, 71, 61, 67])
+
+masses, distances = getData([8.5, 10, 11, 8, 9.5], [64, 67, 71, 61, 67])
+print('masses: ', masses)
+print('distances: ', distances)
+
+def plotData(list1, list2):
+    masses, distances = getData([8.5, 10, 11, 8, 9.5], [64, 67, 71, 61, 67])
+    distances = pylab.array(distances) 
+    masses = pylab.array(masses)
+    forces = masses
+    pylab.plot(forces, distances, 'bo',
+               label = 'Measured displacements')
+    pylab.xlabel('Foot Length X (inches)')
+    pylab.ylabel('Height Y (inches)')
+    
+plotData([8.5, 10, 11, 8, 9.5], [64, 67, 71, 61, 67])
+
+
+def rSquared(measured, predicted):
+    """Assumes measured a one-dimensional array of measured values
+               predicted a one-dimensional array of predicted values
+       Returns coefficient of determination"""
+    estimateError = ((predicted - measured)**2).sum()
+    meanOfMeasured = measured.sum()/len(measured)
+    variability = ((measured - meanOfMeasured)**2).sum()
+    return 1 - estimateError/variability
+
+
+def fitData(list1, list2):
+    masses, distances = getData(list1, list2)
+    distances = pylab.array(distances)
+    forces = pylab.array(masses)
+    pylab.plot(forces, distances, 'ko',
+               label = 'Measured displacements')
+    a,b = pylab.polyfit(forces, distances, 1)
+    
+    predictedDistances = a*pylab.array(forces) + b
+    k = 1.0/a 
+    pylab.plot(forces, predictedDistances,
+              label = 'The equation of the line is Y= '
+               + str(round(a, 3)) + 'X +' + str(round(b, 3)))
+    pylab.legend(loc = 'best')
+    print("The equation of the line is Y= %.4fX + %.4f"%(a, b))
+    print('R-squared: %.4f'%rSquared(distances, predictedDistances))
+
+fitData([8.5, 10, 11, 8, 9.5], [64, 67, 71, 61, 67])

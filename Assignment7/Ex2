@@ -1,0 +1,62 @@
+# Problem Set #7
+# Sarfaroz Yunusov
+# Ex 2 (Part2&4)
+
+import matplotlib.pyplot as plt
+import pylab
+import math
+
+def meanOfList(list):
+    sum = 0
+    for i in list:
+        sum = sum + i
+    
+    mean = sum/len(list)
+    return mean
+
+def squaredDeviation(list):
+    sum = 0
+    for i in list:
+        sum = sum + i  # the sum of all int numbers in the list
+        
+    mean = sum/len(list)  # the dev of sum of ints in list and the lengt of the list
+    #print(mean)
+    
+    devs = 0        #deviation
+    for j in list:
+        devs = devs + (j - mean) ** 2  # the sum of squared deviation score
+
+    return devs # returning the sum of squared dev using the definitial formula
+
+def standardDeviation(list):
+    return math.sqrt(squaredDeviation(list) / (len(list) - 1))
+
+# z score function
+def zScore(list):
+    list1 = []
+    for i in list:
+        list3 = ((i - meanOfList(list)) / standardDeviation(list))
+        list1.append(list3)
+    return list1
+
+def CorrDefFormula(list1, list2):
+    productsOfZscores = []
+    for num1, num2 in zip(zScore(list1), zScore(list2)):
+        productsOfZscores.append(num1 * num2)     # Zx * Zy
+    
+    sumOfElements = sum(productsOfZscores) # E(Zx * Zy)
+    
+    denominator = len(list1) - 1 # N - 1
+    
+    r = sumOfElements / denominator  # r = E(Zx * Zy) / N - 1
+    print("Correlation (Pearson r) is: %.4f (Definitional Formula)"%r)
+    
+    effectSize = r*r  # R^2
+    print("Effect size: %.2f"%effectSize)
+    
+    # plotting the data
+    plt.scatter(list1, list2)  
+    plt.show()
+    
+CorrDefFormula([25, 35, 10, 40, 85, 75, 60, 45, 50],
+           [63, 68, 72, 62, 65, 46, 51, 60, 55])

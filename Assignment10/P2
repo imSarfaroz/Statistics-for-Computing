@@ -1,0 +1,51 @@
+#Sarfaroz Yunusov
+#Ex2 P2
+
+from scipy.stats import f_oneway
+
+data1 = [5, 9, 11, 6, 2, 15]
+data2 = [16, 17, 18, 13, 10, 19]
+data3 = [14, 19, 16, 9, 15, 25]
+
+F, p = f_oneway(data1, data2, data3)
+
+
+print("F = %.2f"%F)
+print("P = %.2f"%p)
+
+# Calculate partial eta squared
+# 1. Need to Calculate SSbet
+# 2. Need to Calculate SSwith
+
+def mean(list):
+    sum = 0
+    for i in list:
+        sum = sum + i
+    
+    mean = sum/len(list) # the total sum of integers in a list devided by the total numbers of int
+    return mean
+
+def sqDeviation(list):
+    sum2 = 0
+    sum3 = 0
+    for i in list:
+        sum2 = sum2 + i**2
+    
+    for j in list:
+        sum3 = sum3 + j
+    squared = sum3**2 / len(list)
+    
+    result = sum2 - squared 
+    return result 
+
+
+SSbet = len(data1) * ((mean(data1)**2 + mean(data2)**2 + mean(data3)**2)
+ - (((mean(data1) + mean(data2) + mean(data3))**2) / 3))
+
+SSwith = sqDeviation(data1) + sqDeviation(data2) + sqDeviation(data3)
+
+partialEta = SSbet / (SSbet + SSwith)
+    
+print("SSbet = %2f"%SSbet)
+print("SSwith = %.2f"%SSwith)
+print("Partical Eta squared = %.2f"%partialEta)

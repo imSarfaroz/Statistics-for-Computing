@@ -1,0 +1,146 @@
+# Ex3 P2
+import pylab
+import random
+
+class Passenger(object):
+    features = ('C1', 'C2', 'C3', 'age', 'male gender')
+    def __init__(self, pClass, age, gender, survived, name):
+        self.name = name
+        self.featureVec = [0, 0, 0, age, gender]
+        self.featureVec[pClass - 1] = 1
+        self.label = survived
+        self.cabinClass = pClass
+        self.featureVec2 = (age, pClass)
+
+    def featureDist(self, other):
+        dist = 0.0
+        for i in range(len(self.featureVec2)):
+            dist += abs(self.featureVec2[i] - other.featureVec[i])**2
+        return dist**0.5
+    def distance(self, other):
+        return minkowskiDist(self.featureVec, other.featureVec, 2)
+    def getClass(self):
+        return self.cabinClass
+    def getAge(self):
+        return self.featureVec[3]
+    def getGender(self):
+        return self.featureVec[4]
+    def getName(self):
+        return self.name
+    def getFeatures(self):
+        return self.featureVec[:]
+    def getLabel(self):
+        return self.label
+    
+def accuracy(truePos, falsePos, trueNeg, falseNeg):
+    numerator = truePos + trueNeg
+    denominator = truePos + trueNeg + falsePos + falseNeg
+    return numerator/denominator
+
+
+def getTitanicData(fname):
+    data = {}
+    data['class'], data['survived'], data['age'] = [], [], []
+    data['gender'], data['name'] = [], []
+    f = open(fname)
+    line = f.readline()
+    while line != '':
+        split = line.split(',')
+        data['class'].append(int(split[0]))
+        data['age'].append(float(split[1]))
+        if split[2] == 'M':
+            data['gender'].append(1)
+        else:
+            data['gender'].append(0)
+        data['survived'].append(int(split[3])) #1 = survived
+        data['name'].append(split[4:])
+        line = f.readline()
+    return data
+
+
+def buildTitanicExamples(fileName):
+    data = getTitanicData(fileName)
+    examples = []
+    for i in range(len(data['class'])):
+        p = Passenger(data['class'][i], data['age'][i],
+                      data['gender'][i], data['survived'][i],
+                      data['name'][i])
+        examples.append(p)
+    return examples
+
+def divide80_20(examples):
+    sampleIndices = random.sample(range(len(examples)),
+                                  len(examples)//5)
+    trainingSet, testSet = [], []
+    for i in range(len(examples)):
+        if i in sampleIndices:
+            testSet.append(examples[i])
+        else:
+            trainingSet.append(examples[i])
+    return trainingSet, testSet
+
+examples = buildTitanicExamples('/Users/sarfarozu/Downloads/Bard classes/statistics codes/TitanicPassengers.txt')
+training, test_set = divide80_20(examples)
+print(training, test_set)
+
+
+def findKNearest(example, exampleSet, k):
+    kNearest, distances = [], []
+    
+    for i in range(k):
+        kNearest.append(exampleSet[i])
+        distances.append(example.featureDist(exampleSet[i]))
+    maxDist = max(distances) 
+    
+    for e in exampleSet[k:]:
+        dist = example.featureDist(e)
+        if dist < maxDist:
+           
+            maxIndex = distances.index(maxDist)
+            kNearest[maxIndex] = e
+            distances[maxIndex] = dist
+            maxDist = max(distances)      
+    return kNearest, distances
+    
+def KNearestClassify(training, testSet, label, k):
+    """Assumes training and testSet lists of examples, k an int"""
+    truePos, falsePos, trueNeg, falseNeg = 0, 0, 0, 0
+    for e in testSet:
+        nearest, distances = findKNearest(e, training, k)
+       
+        numMatch = 0
+        for i in range(len(nearest)):
+            if nearest[i].getLabel() == label:
+                numMatch += 1
+        if numMatch > k//2: 
+            if e.getLabel() == label:
+                truePos += 1
+            else:
+                falsePos += 1
+        else: 
+            if e.getLabel() != label:
+                trueNeg += 1
+            else:
+                falseNeg += 1
+    return truePos, falsePos, trueNeg, falseNeg
+
+def findK(training, minK, maxK, numFolds, label):
+    #Find average accuracy for range of odd values of k
+    accuracies = []
+    for k in range(minK, maxK + 1, 2):
+        score = 0.0
+        for i in range(numFolds):
+            #downsample to reduce computation time
+            fold = random.sample(training, min(5000, len(training)))
+            examples, testSet = divide80_20(fold)
+            truePos, falsePos, trueNeg, falseNeg =\
+                KNearestClassify(examples, testSet, label, k)
+            score += accuracy(truePos, falsePos, trueNeg, falseNeg)
+        accuracies.append(score/numFolds)
+    pylab.plot(range(minK, maxK + 1, 2), accuracies)
+    pylab.title('Average Accuracy vs k (' + str(numFolds)\
+                + ' folds)')
+    pylab.xlabel('k')
+    pylab.ylabel('Accuracy')
+
+print(findK(training, 1, 21, 5, 1))

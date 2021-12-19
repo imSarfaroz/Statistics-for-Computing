@@ -1,0 +1,9 @@
+#Sarfaroz Yunusov
+#Ex2 P1
+
+from scipy.stats import f_oneway
+
+F, p = f_oneway([5, 9, 11, 6, 2, 15], [16, 17, 18, 13, 10, 19],[14, 19, 16, 9, 15, 25])
+
+print("F = %.2f"%F)
+print("P = %.2f"%p)

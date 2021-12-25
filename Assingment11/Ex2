@@ -1,0 +1,131 @@
+from matplotlib import pyplot
+import matplotlib.colors as mcolors
+from random import randint, sample
+from numpy import array, cov, diag, dot, linalg, ones
+from numpy import outer, random, sqrt, vstack, zeros
+def kMeans(data, k, centers=None):
+if centers is None:
+centers = array( sample(list(data), k) ) # list() not needed in Python 2
+change = 1.0
+prev = []
+while change > 1e-8:
+clusters = [[] for x in range(k)]
+for vector in data:
+diffs = centers - vector
+dists = (diffs * diffs).sum(axis=1)
+closest = dists.argmin()
+clusters[closest].append(vector)
+change = 0
+for i, cluster in enumerate(clusters):
+cluster = array(cluster)
+center = cluster.sum(axis=0)/len(cluster)
+diff = center - centers[i]
+
+change += (diff * diff).sum()
+centers[i] = center
+return centers, clusters
+
+def kMeansSpread(data, k):
+n = len(data)
+index = randint(0, n-1)
+indices = set([index])
+influence = zeros(n)
+while len(indices) < k:
+diff = data - data[index]
+sumSq = (diff * diff).sum(axis=1) + 1.0
+influence += 1.0 / sumSq
+index = influence.argmin()
+while index in indices:
+index = randint(0, n-1)
+indices.add(index)
+centers = vstack([data[i] for i in indices])
+return kMeans(data, k, centers)
+class Passenger(object):
+features = ('C1', 'C2', 'C3', 'age', 'male gender')
+def __init__(self, pClass, age, gender, survived, name):
+self.name = name
+self.featureVec = [0, 0, 0, age, gender]
+self.featureVec[pClass - 1] = 1
+self.label = survived
+self.cabinClass = pClass
+self.featureVec2 = (age, pClass)
+def featureDist(self, other):
+dist = 0.0
+for i in range(len(self.featureVec2)):
+dist += abs(self.featureVec2[i] - other.featureVec[i])**2
+return dist**0.5
+def distance(self, other):
+return minkowskiDist(self.featureVec, other.featureVec, 2)
+def getClass(self):
+return self.cabinClass
+def getAge(self):
+return self.featureVec[3]
+
+def getGender(self):
+return self.featureVec[4]
+def getName(self):
+return self.name
+def getFeatures(self):
+return self.featureVec[:]
+def getLabel(self):
+return self.label
+
+def getTitanicData(fname):
+data = {}
+data['class'], data['survived'], data['age'] = [], [], []
+data['gender'], data['name'] = [], []
+f = open(fname)
+line = f.readline()
+while line != '':
+split = line.split(',')
+data['class'].append(int(split[0]))
+data['age'].append(float(split[1]))
+if split[2] == 'M':
+data['gender'].append(1)
+else:
+data['gender'].append(0)
+data['survived'].append(int(split[3])) #1 = survived
+data['name'].append(split[4:])
+line = f.readline()
+pyplot.scatter(data['age'],data['class'], s = 40)
+pyplot.xlabel('Age', fontsize = 20)
+pyplot.ylabel('CLass', fontsize = 20)
+pyplot.title('Survival', fontsize = 20)
+pyplot.show()
+return data
+def plotData(passengers):
+ages, classes, survived = [], [], []
+for i in range(len(passengers)):
+ages.append(passengers[i].getAge())
+classes.append(passengers[i].getClass())
+survived.append(passengers[i].getLabel())
+pyplot.scatter(ages, classes, s = 3, c = survived, cmap = mcolors.ListedColormap(["black", "red"])),
+pyplot.title('titanic survival')
+pyplot.xlabel('CLass')
+pyplot.ylabel('Age')
+data = getTitanicData('/Users/sarfarozu/Downloads/Bard classes/statistics codes/TitanicPassengers.txt')
+
+#plotData(data)
+if __name__ == '__main__':
+print("\nK-means clustering\n")
+Class = []
+age = []
+with open('/Users/sarfarozu/Downloads/Bard classes/statistics codes/TitanicPassengers.txt') as csvfile:
+lines = csv.reader(csvfile, delimiter=',')
+for row in lines:
+Class.append([float(row[0]), float(row[1])])
+testDataA = random.random((10,2)) # No clumps
+centers, clusters = kMeans(Class, 2)
+
+colors = ['#FF0000','#00FF00','#0000FF',
+'#FFFF00','#00FFFF','#FF00FF']
+for i, cluster in enumerate(clusters):
+x, y = zip(*cluster)
+color = colors[i % len(colors)]
+pyplot.scatter(y, x, c=color, marker='o')
+x, y = zip(*centers)
+pyplot.scatter(y, x, s=20, c='black', marker='o')
+pyplot.xlabel('Age')
+pyplot.ylabel('CLass')
+pyplot.title('Survival')
+pyplot.show()
